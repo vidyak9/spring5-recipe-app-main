@@ -24,11 +24,14 @@ public class RecipeControllerTest {
 
     RecipeController controller;
 
+    MockMvc mockMvc;
+
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.openMocks(this);
 
         controller = new RecipeController(recipeService);
+        mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
     }
 
     @Test
@@ -36,8 +39,6 @@ public class RecipeControllerTest {
 
         Recipe recipe = new Recipe();
         recipe.setId(1L);
-
-        MockMvc mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
 
         when(recipeService.findById(anyLong())).thenReturn(recipe);
 
@@ -51,8 +52,6 @@ public class RecipeControllerTest {
     public void testGetNewRecipeForm() throws Exception {
         RecipeCommand command = new RecipeCommand();
 
-        MockMvc mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
-
         mockMvc.perform(get("/recipe/new"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("recipe/recipeform"))
@@ -64,8 +63,6 @@ public class RecipeControllerTest {
     public void testPostNewRecipeForm() throws Exception {
         RecipeCommand command = new RecipeCommand();
         command.setId(2L);
-
-        MockMvc mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
 
         when(recipeService.saveRecipeCommand(any())).thenReturn(command);
 
@@ -84,7 +81,6 @@ public class RecipeControllerTest {
         RecipeCommand command = new RecipeCommand();
         command.setId(2L);
 
-        MockMvc mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
         when(recipeService.findCommandById(anyLong())).thenReturn(command);
 
         mockMvc.perform(get("/recipe/1/update"))
@@ -95,7 +91,6 @@ public class RecipeControllerTest {
 
     @Test
     public void testDeleteAction() throws Exception {
-        MockMvc mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
 
         mockMvc.perform(get("/recipe/1/delete"))
                 .andExpect(status().is3xxRedirection())
